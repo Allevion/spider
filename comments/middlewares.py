@@ -7,13 +7,31 @@
 
 from scrapy import signals
 import random
+import json
 # from user_agents import agents
+
+
 
 class UserAgentMiddleware(object):
     """ 换User-Agent """
 
     def process_request(self, request, spider):
         request.headers["User-Agent"] = '%E5%8D%B3%E5%88%BB/1107'
+
+#message 接口需要cookies
+class CookiesMiddleware(object):
+    """ 换Cookie """
+    cookie = {
+        'jike:sess':'eyJfdWlkIjoiNWFmNjczMTE3MGM4N2EwMDExNDA4NjY2IiwiX3Nlc3Npb25Ub2tlbiI6Ill1aGRmVGRyQVI4NW9JcmlsZEEwN29LQ3YifQ==',
+        'jike:sess.sig':'4DXy14mf7YMswddopIKpDC9rtx4'
+    }
+
+    def process_request(self, request, spider):
+        bs = ''
+        for i in range(32):
+            bs += chr(random.randint(97, 122))
+        _cookie = json.dumps(self.cookie) % bs
+        request.cookies = json.loads(_cookie)
 
 class CommentsSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,

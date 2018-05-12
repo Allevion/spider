@@ -15,3 +15,10 @@ from scrapy import Item, Field
 
 class TopicItem(Item):
     topic = Field()
+
+class TimelineItem(Item):
+    timeline = Field()
+
+class CommentItem(Item):
+    primaryComment = Field()
+    comment = Field()
