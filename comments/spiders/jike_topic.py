@@ -29,14 +29,6 @@ class JikeTopicSpider(scrapy.Spider):
                       headers=headers, callback=self.parse_topic)
             request.meta['topic'] = topic
             yield request
-        #
-        # req_body = {}
-        # req_body['topic'] =  '5752cb471c0d051200ba0a1f'
-        # req_body['limit'] =  '100'
-        # req_body['loadMoreKey'] =  '5a8797443652c300108e81cf'
-        # yield Request(url='http://app.jike.ruguoapp.com/1.0/messages/history',method='POST',
-        #                   body=req_body,
-        #                   headers=headers,callback=self.parse)
 
     def parse_topic(self, response):
         topics = json.loads(response.text)

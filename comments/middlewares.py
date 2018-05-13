@@ -27,11 +27,7 @@ class CookiesMiddleware(object):
     }
 
     def process_request(self, request, spider):
-        bs = ''
-        for i in range(32):
-            bs += chr(random.randint(97, 122))
-        _cookie = json.dumps(self.cookie) % bs
-        request.cookies = json.loads(_cookie)
+        request.cookies = self.cookie
 
 class CommentsSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,

@@ -21,4 +21,4 @@ class TimelineItem(Item):
 
 class CommentItem(Item):
     primaryComment = Field()
-    comment = Field()
+    commentReply = Field()

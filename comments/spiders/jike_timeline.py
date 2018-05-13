@@ -17,7 +17,7 @@ class JikeTimelineSpider(scrapy.Spider):
     name = 'jike_timeline'
     allowed_domains = ['jike.ruguoapp.com']
 
-    def getRequest(self,topic_id,loadMoreKey):
+    def timeline_request(self,topic_id,loadMoreKey):
         request_body = {}
         request_body['topic'] = topic_id
         request_body['limit'] = 50
@@ -35,15 +35,17 @@ class JikeTimelineSpider(scrapy.Spider):
         jike = db['jike']
 
         for topic in jike.find():
-            yield self.getRequest(topic['_id'],None)
+            if topic['subscribersCount'] > 10000:# 关注小于10000数据舍弃
+                yield self.timeline_request(topic['_id'],None)
 
     def parse(self, response):
         timelines = json.loads(response.text)
         if timelines['data'] and len(timelines['data']) > 0:
             for timeline in timelines['data']:
-                item = TimelineItem()
-                item['timeline'] = timeline
-                yield item
+                if item['commentCount'] > 10 and item['likeCount'] > 10 :# 评论、点赞小于10数据舍弃，repostCount转发暂不考虑
+                    item = TimelineItem()
+                    item['timeline'] = timeline
+                    yield item
         if timelines['loadMoreKey']:
             yield self.getRequest(response.meta['topic'],timelines['loadMoreKey'])
         pass
